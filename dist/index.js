@@ -16,21 +16,18 @@ app.get('/months', (req, res) => {
     }
     try {
         // 验证日期格式
-        const fromDate = (0, moment_timezone_1.default)(from, 'YYYY-MM');
-        const toDate = (0, moment_timezone_1.default)(to, 'YYYY-MM');
+        const fromDate = moment_timezone_1.default.utc(from, 'YYYY-MM').subtract(1, 'month');
+        const toDate = moment_timezone_1.default.utc(to, 'YYYY-MM').subtract(1, 'month');
         if (!fromDate.isValid() || !toDate.isValid()) {
             return res.status(400).json({ error: 'Invalid date format' });
-        }
-        // 根据经纬度获取时区
-        const timezone = moment_timezone_1.default.tz.zone(moment_timezone_1.default.tz.guess());
-        if (!timezone) {
-            return res.status(500).json({ error: 'Unable to determine timezone' });
         }
         // 生成月份起始时间数组
         const monthStarts = [];
         let currentDate = fromDate.clone();
         while (currentDate.isSameOrBefore(toDate, 'month')) {
-            monthStarts.push(currentDate.clone().endOf('month').format('YYYY-MM-DDT16:00:00.000Z'));
+            const date = currentDate.clone().endOf('month');
+            date.hours(16).minutes(0).seconds(0).milliseconds(0);
+            monthStarts.push(date.format('YYYY-MM-DDT16:00:00.000[Z]'));
             currentDate.add(1, 'month');
         }
         return res.json({ monthStarts });
