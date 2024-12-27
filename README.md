@@ -11,20 +11,7 @@
 
 ## 安装和运行
 
-1. 安装依赖：
-```bash
-make install
-```
-
-2. 构建项目：
-```bash
-make build
-```
-
-3. 启动服务：
-```bash
-make start
-```
+![运行make启动服务](./docs/make-start.png)
 
 ## API 接口
 
